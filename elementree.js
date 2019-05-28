@@ -15,9 +15,11 @@ function __newModel (Model) {
 }
 
 function __renderTree () {
-  if (rendering) { return }
+  if (rendering) return
   rendering = true
-  rendering = !__merge(root, tree())
+  window.requestAnimationFrame(() => {
+    rendering = !__merge(root, tree())
+  })
 }
 
 function merge (selector, prepared, appState = () => ({})) {

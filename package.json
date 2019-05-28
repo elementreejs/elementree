@@ -14,7 +14,7 @@
     "release:major": "npm run build && npm version major && npm publish",
     "size": "size-limit",
     "test": "run-s clean bundle test-bundle",
-    "test-bundle": "browserify test/test.js | tape-run"
+    "test-bundle": "browserify test.js | tape-run"
   },
   "repository": {
     "type": "git",

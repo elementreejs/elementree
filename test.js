@@ -1,6 +1,8 @@
 const test = require('tape')
-const { merge, prepare, render } = require('../dist/elementree')
-const ready = require('../ready')
+const { merge, prepare, render } = require('./dist/elementree')
+const ready = require('./ready')
+
+const testWhenReady = (cb) => ready(() => setTimeout(cb, 200))
 
 test('render simple template', t => {
   t.plan(2)
@@ -9,7 +11,7 @@ test('render simple template', t => {
     return render`<body><p>Hello</p></body>`
   }
   merge('body', prepare(template))
-  ready(() => {
+  testWhenReady(() => {
     t.ok(document.querySelector('p').innerHTML.includes('Hello'))
     t.end()
   })
@@ -30,7 +32,7 @@ test('passing arguments to child', t => {
     `
   }
   merge('body', prepare(parent))
-  ready(() => {
+  testWhenReady(() => {
     t.equal(document.querySelector('#parent').innerHTML, 'Hello')
     t.equal(document.querySelector('#child').innerHTML, 'World')
     t.end()
@@ -45,7 +47,7 @@ test('render simple template with state', t => {
     return render`<body><p>${value}</p></body>`
   }
   merge('body', prepare(template, state))
-  ready(function () {
+  testWhenReady(function () {
     t.equal(document.querySelector('p').innerHTML, 'Hello')
     t.end()
   })
@@ -71,7 +73,7 @@ test('passing args to child with state', t => {
     `
   }
   merge('body', prepare(parentTemplate, parentState))
-  ready(function () {
+  testWhenReady(function () {
     t.equal(document.querySelector('#parent').innerHTML, 'Hello')
     t.equal(document.querySelector('#child').innerHTML, 'Brave New World')
     t.end()
@@ -99,11 +101,13 @@ test('re-render on state change', t => {
     user: { first: 'Mark', last: 'Stahl' }
   })
   merge('body', prepare(template, state), app)
-  ready(function () {
+  testWhenReady(function () {
     document.querySelector('button').click()
-    const result = `Goodbye Mark Stahl`
-    t.equal(document.querySelector('p').innerHTML, result)
-    t.end()
+    setTimeout(() => {
+      const result = `Goodbye Mark Stahl`
+      t.equal(document.querySelector('p').innerHTML, result)
+      t.end()
+    }, 200)
   })
 })
 
@@ -126,7 +130,7 @@ test('templates have different model instances', t => {
     `
   }
   merge('body', prepare(parentTemplate))
-  ready(function () {
+  testWhenReady(function () {
     t.equal(document.querySelector('.child-hello').innerHTML, 'hello sun')
     t.equal(document.querySelector('.child-goodnight').innerHTML, 'goodnight moon')
     t.end()
@@ -142,7 +146,7 @@ test('render simple template with state class', t => {
     return render`<body><p>${value}</p></body>`
   }
   merge('body', prepare(template, State))
-  ready(function () {
+  testWhenReady(function () {
     t.equal(document.querySelector('p').innerHTML, 'Hello')
     t.end()
   })
@@ -155,7 +159,7 @@ test('render simple template with constructor function', t => {
     return render`<body><p>${value}</p></body>`
   }
   merge('body', prepare(template, State))
-  ready(function () {
+  testWhenReady(function () {
     t.equal(document.querySelector('p').innerHTML, 'Hello')
     t.end()
   })
@@ -170,7 +174,7 @@ test('render simple template with state class as app state', t => {
     return render`<body><p>${value}</p></body>`
   }
   merge('body', prepare(template), State)
-  ready(function () {
+  testWhenReady(function () {
     t.equal(document.querySelector('p').innerHTML, 'Hello')
     t.end()
   })
@@ -183,7 +187,7 @@ test('render simple template with constructor function as app state', t => {
     return render`<body><p>${value}</p></body>`
   }
   merge('body', prepare(template), State)
-  ready(function () {
+  testWhenReady(function () {
     t.equal(document.querySelector('p').innerHTML, 'Hello')
     t.end()
   })
