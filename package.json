@@ -2,19 +2,16 @@
   "name": "elementree",
   "version": "0.20.6",
   "description": "Observables + JS Template Literals",
-  "main": "dist/elementree.js",
   "types": "index.d.ts",
   "scripts": {
-    "build": "run-s lint test size",
-    "bundle": "webpack",
     "clean": "rimraf dist",
     "lint": "standard --fix",
     "release:patch": "npm run build && npm version patch && npm publish",
     "release:minor": "npm run build && npm version minor && npm publish",
     "release:major": "npm run build && npm version major && npm publish",
     "size": "size-limit",
-    "test": "run-s clean bundle test-bundle",
-    "test-bundle": "browserify test/test.js | tape-run"
+    "test": "run-s clean test:run",
+    "test:run": "browserify test/test.js | tape-run"
   },
   "repository": {
     "type": "git",

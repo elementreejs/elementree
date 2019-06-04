@@ -1,5 +1,5 @@
 const test = require('tape')
-const { merge, prepare, render } = require('../dist/elementree')
+const { merge, prepare, render } = require('../index')
 const ready = require('../ready')
 
 test('render simple template', t => {
