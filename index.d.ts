@@ -1,5 +1,5 @@
-type Model = Function | { new(): object }
-type AppState = Model | object
+type Model = object | Function | { new(): object }
+type AppState = Model
 
 type CallableWithModel = (state?: Model) => HTMLElement
 type Prepared = (...args: any[]) => CallableWithModel

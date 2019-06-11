@@ -4,14 +4,13 @@
 > "Less framework, more work."
 
 Elementree is a very extremely small front-end JavaScript "framework" with a focus
-on staying "Just JavaScript" and getting the job done with the mimimum amount of
-framework-y concepts.
+on getting the job done with the mimimum amount of framework-y concepts.
 
 ## Features
 
-* Tiny size. Elementree is less than 6 KB compressed.
-* Minimal cognitive overhead. Less framework means more time to focus on the problem domain.
-* It's just JavaScript. Nothing fancy. Just functions, objects, and template strings.
+* Tiny size. Elementree is less than 6 KB with all dependencies and compressed.
+* Minimal cognitive overhead. More time focused on the problem domain and less time thumbing through framework documentation.
+* Nothing fancy. No transpiling, compiling, or proprietary data shapes. Just functions and template strings.
 
 ## Philosophy
 
@@ -53,12 +52,12 @@ function template (model, { user }) {
 }
 
 // state local to the template above
-const state = () => ({ greeting: 'Hello' })
+const state = { greeting: 'Hello' }
 
 // application state
-const app = () => ({
+const app = {
   user: { first: 'Mark', last: 'Stahl' }
-})
+}
 
 // export the result and do some server-side rendering
 module.exports = merge('body', prepare(template, state), app)
@@ -67,14 +66,14 @@ module.exports = merge('body', prepare(template, state), app)
 ## Elementree API
 
 ```js
-merge(to: String, renderer: Function [, state: Function]) -> String | undefined
+merge(to: String, renderer: Function [, state: Object | Function]) -> String | undefined
 ```
 
 `merge` wires up a renderer and an optional object representing an application
 state and merges it to a selector or DOM element. Simply put, `merge` renders
 your root template to the DOM.
 
-The first argument to `merge` is a string which will be used by `document.querySelector`, after `DOMContentLoaded`, to find root element. The second argument is the renderer. This argument is a `Function` that returns a function that returns an `HTMLElement` such as a `prepare` call. The third, optional, argument is a function that returns an object representing the application's state. This object will passed to the renderer function as an argument.
+The first argument to `merge` is a string which will be used by `document.querySelector`, after `DOMContentLoaded`, to find root element. The second argument is the renderer. This argument is a `Function` that returns a function that returns an `HTMLElement` such as a `prepare` call. The third, optional, argument is an object or function that returns an object representing the application's state. This object will passed to the renderer function as an argument.
 
 Elementree adds a single property onto the application's state object. The `route` property is a concatenation of `location.pathname`, `location.search` and `location.hash`. Updating the `route` property will cause a `history.pushState`. Updating the address through browser interations will update the `route` property.
 
@@ -89,10 +88,10 @@ Use `html` to interpolate HTML, without escaping it, directly into your template
 
 
 ```js
-prepare(template: Function [, model: Function]) -> (Function -> HTMLElement)
+prepare(template: Function [, model: Object | Function]) -> (Function -> HTMLElement)
 ```
 
-`prepare` a template with a model object together, creating a renderer function. At a minimum, a template function is required to be passed as the first argument. The second argument, which is optional, is a function that returns an object that is the localized model to the template. If the template function is joined with a model, the model **will ALWAYS be the 0th argument to the template function**. All other arguments will follow.
+`prepare` a template with a model object together, creating a renderer function. At a minimum, a template function is required to be passed as the first argument. The second argument, which is optional, is an object or  function that returns an object that is the localized model to the template. If the template function is joined with a model, the model **will ALWAYS be the 0th argument to the template function**. All other arguments will follow.
 
 
 ```js
